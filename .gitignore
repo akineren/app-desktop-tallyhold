@@ -1,0 +1,14 @@
+# Kullanıcı verisi
+userdata/*
+!userdata/.gitkeep
+*.db
+*.db-journal
+*.db-wal
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Editör
+.vscode/
