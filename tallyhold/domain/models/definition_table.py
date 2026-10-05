@@ -1,3 +1,4 @@
+from collections import Counter
 from dataclasses import dataclass
 
 from tallyhold.domain.models.definition_field import DefinitionField
@@ -25,3 +26,13 @@ class DefinitionTable:
             )
         if not self.label.strip():
             raise ValueError("Table label cannot be empty.")
+        if not self.fields:
+            raise ValueError(f"Table '{self.name}' must have at least one field.")
+
+        counts = Counter(field.name for field in self.fields)
+        duplicates = sorted(name for name, count in counts.items() if count > 1)
+        if duplicates:
+            raise ValueError(
+                f"Table '{self.name}' has duplicate field names: "
+                f"{', '.join(duplicates)}."
+            )

@@ -45,3 +45,21 @@ def test_table_is_immutable():
     table = create_table()
     with pytest.raises(dataclasses.FrozenInstanceError):
         table.label = "Başka"
+
+def test_table_without_fields_is_rejected():
+    with pytest.raises(ValueError, match="at least one field"):
+        create_table(fields=())
+
+
+def test_duplicate_field_names_are_rejected():
+    field_copy = DefinitionField(
+        name="tax_number", label="VKN", type_field=TypeField.TEXT
+    )
+    with pytest.raises(ValueError, match="duplicate field names: tax_number"):
+        create_table(fields=(FIELD_TAX_NUMBER, field_copy))
+
+
+def test_fields_with_different_names_are_accepted():
+    field_title = DefinitionField(name="title", label="Ünvan", type_field=TypeField.TEXT)
+    table = create_table(fields=(FIELD_TAX_NUMBER, field_title))
+    assert len(table.fields) == 2
